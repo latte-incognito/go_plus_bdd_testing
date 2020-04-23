@@ -18,3 +18,11 @@ Also checked:
 https://github.com/smartystreets/goconvey <- Nice reporting vs repo haven't been updated for 9 months
 https://github.com/onsi/ginkgo  <-- Most mature framework, more like specs descriptions
 https://github.com/franela/goblin <-- Mocha style, mostly familiar for JS users
+
+#### Adding binding for godod and go test
+
+So how to do it is described in godog readme.
+
+For us we create basic_test.go file which is responsible for collection of feature files
+to run test from root use :
+``go test -v --godog.format=pretty``
