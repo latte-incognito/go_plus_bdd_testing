@@ -26,3 +26,7 @@ So how to do it is described in godog readme.
 For us we create basic_test.go file which is responsible for collection of feature files
 to run test from root use :
 ``go test -v --godog.format=pretty``
+
+
+#### Notes
+Godog doesn't have documentation in proper way, it works with god blessing mb ginkgo ?

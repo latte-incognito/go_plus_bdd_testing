@@ -75,8 +75,13 @@ func FeatureContext(s *godog.Suite) {
 	api := &apiFeature{}
 
 	s.BeforeScenario(api.resetResponse)
-
 	s.Step(`^I send "(GET|POST|PUT|DELETE)" request to "([^"]*)"$`, api.iSendrequestTo)
 	s.Step(`^the response code should be (\d+)$`, api.theResponseCodeShouldBe)
 	s.Step(`^the response should match json:$`, api.theResponseShouldMatchJSON)
+
+	api2 := &responseSt{}
+
+	s.Step(`^I send "([^"]*)" request to external "([^"]*)"$`, api2.iSendRequestToExternal)
+	s.Step(`^the external response code should be (\d+)$`, api2.theExternalResponseCodeShouldBe)
+	s.Step(`^the external response should match json:$`, api2.theExternalResponseShouldMatchJson)
 }
