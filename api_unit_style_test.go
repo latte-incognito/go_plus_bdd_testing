@@ -52,14 +52,14 @@ func (a *apiFeature) theResponseCodeShouldBe(code int) error {
 }
 
 func (a *apiFeature) theResponseShouldMatchJSON(body *messages.PickleStepArgument_PickleDocString) (err error) {
-	var expected, actual interface{}
-
-	encodeAndCompare([]byte(body.Content), &expected, a.resp.Body.Bytes(), &actual)
-
+	encodeAndCompare([]byte(body.Content), a.resp.Body.Bytes())
 	return nil
 }
 
-func encodeAndCompare(exp2Unmarshal []byte, exp2Store interface{}, actual2Unmarshll []byte, actual2Store interface{}) (err error) {
+func encodeAndCompare(exp2Unmarshal []byte, actual2Unmarshll []byte) (err error) {
+
+	var exp2Store, actual2Store interface{}
+
 	// re-encode expected response
 	if err = json.Unmarshal(exp2Unmarshal, exp2Store); err != nil {
 		return
