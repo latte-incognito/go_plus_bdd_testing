@@ -54,34 +54,40 @@ func (a *apiFeature) theResponseCodeShouldBe(code int) error {
 func (a *apiFeature) theResponseShouldMatchJSON(body *messages.PickleStepArgument_PickleDocString) (err error) {
 	var expected, actual interface{}
 
+	encodeAndCompare([]byte(body.Content), &expected, a.resp.Body.Bytes(), &actual)
+
+	return nil
+}
+
+func encodeAndCompare(exp2Unmarshal []byte, exp2Store interface{}, actual2Unmarshll []byte, actual2Store interface{}) (err error) {
 	// re-encode expected response
-	if err = json.Unmarshal([]byte(body.Content), &expected); err != nil {
+	if err = json.Unmarshal(exp2Unmarshal, exp2Store); err != nil {
 		return
 	}
 
 	// re-encode actual response too
-	if err = json.Unmarshal(a.resp.Body.Bytes(), &actual); err != nil {
+	if err = json.Unmarshal(actual2Unmarshll, actual2Store); err != nil {
 		return
 	}
 
 	// the matching may be adapted per different requirements.
-	if !reflect.DeepEqual(expected, actual) {
-		return fmt.Errorf("expected JSON does not match actual, %v vs. %v", expected, actual)
+	if !reflect.DeepEqual(exp2Store, actual2Store) {
+		return fmt.Errorf("expected JSON does not match actual, %v vs. %v", exp2Store, actual2Store)
 	}
 	return nil
 }
 
 func FeatureContext(s *godog.Suite) {
-	api := &apiFeature{}
+	internal_api := &apiFeature{}
 
-	s.BeforeScenario(api.resetResponse)
-	s.Step(`^I send "(GET|POST|PUT|DELETE)" request to "([^"]*)"$`, api.iSendrequestTo)
-	s.Step(`^the response code should be (\d+)$`, api.theResponseCodeShouldBe)
-	s.Step(`^the response should match json:$`, api.theResponseShouldMatchJSON)
+	s.BeforeScenario(internal_api.resetResponse)
+	s.Step(`^I send "(GET|POST|PUT|DELETE)" request to "([^"]*)"$`, internal_api.iSendrequestTo)
+	s.Step(`^the response code should be (\d+)$`, internal_api.theResponseCodeShouldBe)
+	s.Step(`^the response should match json:$`, internal_api.theResponseShouldMatchJSON)
 
-	api2 := &responseSt{}
+	external_api := &responseSt{}
 
-	s.Step(`^I send "([^"]*)" request to external "([^"]*)"$`, api2.iSendRequestToExternal)
-	s.Step(`^the external response code should be (\d+)$`, api2.theExternalResponseCodeShouldBe)
-	s.Step(`^the external response should match json:$`, api2.theExternalResponseShouldMatchJson)
+	s.Step(`^I send "([^"]*)" request to external "([^"]*)"$`, external_api.iSendRequestToExternal)
+	s.Step(`^the external response code should be (\d+)$`, external_api.theExternalResponseCodeShouldBe)
+	s.Step(`^the external response should match json:$`, external_api.theExternalResponseShouldMatchJson)
 }
